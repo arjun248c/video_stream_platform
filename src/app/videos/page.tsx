@@ -38,8 +38,9 @@ export default function VideosPage() {
         }
 
         setVideos(data || []);
-      } catch (error: any) {
-        setError(error.message || 'Error fetching videos');
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Error fetching videos';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

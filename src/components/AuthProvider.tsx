@@ -26,7 +26,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isConfigured, setIsConfigured] = useState(Boolean(supabase));
+  const [isConfigured] = useState(Boolean(supabase));
 
   useEffect(() => {
     // If Supabase is not configured, don't attempt to get session

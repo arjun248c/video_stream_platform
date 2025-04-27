@@ -49,8 +49,9 @@ export default function AuthPage() {
         router.push('/');
         router.refresh();
       }
-    } catch (error: any) {
-      setError(error.message || 'An error occurred during authentication');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during authentication';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

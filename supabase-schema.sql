@@ -1,3 +1,6 @@
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Create videos table
 CREATE TABLE videos (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -20,7 +23,7 @@ CREATE POLICY "Allow public read access" ON videos
 
 -- Allow authenticated users to insert their own videos
 CREATE POLICY "Allow authenticated users to insert their own videos" ON videos
-  FOR INSERT TO authenticated USING (auth.uid() = user_id);
+  FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
 -- Allow users to update their own videos
 CREATE POLICY "Allow users to update their own videos" ON videos
@@ -40,7 +43,7 @@ CREATE POLICY "Allow public read access for videos" ON storage.objects
 
 -- Allow authenticated users to upload to the videos bucket
 CREATE POLICY "Allow authenticated users to upload videos" ON storage.objects
-  FOR INSERT TO authenticated USING (
+  FOR INSERT TO authenticated WITH CHECK (
     bucket_id = 'videos' AND
     auth.uid() = owner
   );

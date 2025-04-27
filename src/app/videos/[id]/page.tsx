@@ -40,8 +40,9 @@ export default function VideoPage({ params }: { params: { id: string } }) {
         }
 
         setVideo(data);
-      } catch (error: any) {
-        setError(error.message || 'Error fetching video');
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Error fetching video';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

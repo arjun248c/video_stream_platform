@@ -14,7 +14,7 @@ const isValidUrl = (url: string | undefined): boolean => {
   try {
     new URL(url);
     return true;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };

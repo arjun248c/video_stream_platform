@@ -12,7 +12,7 @@ const isValidUrl = (url: string | undefined): boolean => {
   try {
     new URL(url);
     return true;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };
@@ -43,14 +43,14 @@ export async function middleware(request: NextRequest) {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set(name: string, value: string, options: Record<string, unknown>) {
           request.cookies.set({
             name,
             value,
             ...options,
           });
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: Record<string, unknown>) {
           request.cookies.set({
             name,
             value: '',
@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest) {
       const redirectUrl = new URL('/auth', request.url);
       return NextResponse.redirect(redirectUrl);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error in middleware:', error);
     // If there's an error with Supabase, redirect to home page
     const redirectUrl = new URL('/?error=supabase', request.url);

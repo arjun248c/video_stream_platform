@@ -44,7 +44,7 @@ export default function UploadPage() {
       const filePath = `videos/${fileName}`;
 
       // Upload to Supabase Storage
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('videos')
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -82,8 +82,9 @@ export default function UploadPage() {
       setUploadedVideoUrl(publicUrl);
       setVideoTitle('');
       setVideoDescription('');
-    } catch (error: any) {
-      setError(error.message || 'Error uploading video');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error uploading video';
+      setError(errorMessage);
     } finally {
       setUploading(false);
       setUploadProgress(0);
