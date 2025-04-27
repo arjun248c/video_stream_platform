@@ -1,103 +1,71 @@
-import Image from "next/image";
+'use client';
+
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const searchParams = useSearchParams();
+  const setupRequired = searchParams.get('setup') === 'required';
+  const supabaseError = searchParams.get('error') === 'supabase';
+  const { isConfigured } = useAuth();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[70vh] text-center">
+      {setupRequired && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8 w-full max-w-3xl text-left">
+          <p className="font-bold">Supabase Setup Required</p>
+          <p>
+            Please set up your Supabase environment variables to enable full functionality.
+            See the <Link href="/SUPABASE_SETUP.md" className="underline">Supabase Setup Guide</Link> for instructions.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      )}
+
+      {supabaseError && (
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 w-full max-w-3xl text-left">
+          <p className="font-bold">Supabase Connection Error</p>
+          <p>
+            There was an error connecting to Supabase. Please check your configuration and try again.
+          </p>
+        </div>
+      )}
+
+      <h1 className="text-4xl font-bold mb-6">Welcome to VideoStream</h1>
+      <p className="text-xl mb-8 max-w-2xl">
+        A platform where you can upload and stream videos online. Share your content with the world!
+      </p>
+      <div className="flex gap-4">
+        <Link
+          href="/videos"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          Browse Videos
+        </Link>
+        <Link
+          href="/upload"
+          className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-lg transition-colors"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Upload Video
+        </Link>
+      </div>
+
+      {!isConfigured && (
+        <div className="mt-12 p-6 bg-gray-100 rounded-lg max-w-3xl">
+          <h2 className="text-2xl font-bold mb-4">Getting Started</h2>
+          <ol className="list-decimal list-inside text-left space-y-2">
+            <li>Create a <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Supabase</a> account</li>
+            <li>Create a new Supabase project</li>
+            <li>Copy your Supabase URL and anon key from the project settings</li>
+            <li>Add these values to your <code className="bg-gray-200 px-2 py-1 rounded">.env.local</code> file</li>
+            <li>Run the SQL commands from <code className="bg-gray-200 px-2 py-1 rounded">supabase-schema.sql</code> in the Supabase SQL editor</li>
+            <li>Restart the development server</li>
+          </ol>
+          <p className="mt-4 text-sm text-gray-600">
+            For detailed instructions, see the <Link href="/SUPABASE_SETUP.md" className="text-blue-600 hover:underline">Supabase Setup Guide</Link>.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
